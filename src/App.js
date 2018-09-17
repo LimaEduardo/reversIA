@@ -43,7 +43,7 @@ const styles = theme => ({
     backgroundSize: "cover",
     height: "100vh"
   }
-});
+})
 
 class App extends Component {
   constructor(props){

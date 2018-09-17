@@ -14,7 +14,7 @@ const styles = {
     casa: {
       display: "inline-block",
       flexGrow: 1,
-      width: `calc(100% * (1/8))`
+      width: `calc(100% * (1/8))`,
     }
 }
 
@@ -61,18 +61,19 @@ export class Tabuleiro extends Component {
 
   handleClick(line,column){
     let updatedTable = this.state.tabuleiro
-    updatedTable[line][column] = this.state.turn
-    this.nextTurn().then((nextTurn) => {
-      this.setState({
-        tabuleiro: updatedTable,
-        turn: nextTurn
+    if (updatedTable[line][column] === ""){
+      updatedTable[line][column] = this.state.turn
+      this.nextTurn().then((nextTurn) => {
+        this.setState({
+          tabuleiro: updatedTable,
+          turn: nextTurn
+        })
       })
-    })
+    }
   }
 
   render() {
     const {tabuleiro, pronto} = this.state
-    console.log(tabuleiro)
     return (
       <div style={styles.root}>
         {pronto ? (

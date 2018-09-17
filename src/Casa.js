@@ -1,16 +1,26 @@
 import React, { Component } from 'react'
+import { withStyles } from '@material-ui/core/styles';
 
-const styles = {
+const styles = theme => ({
     root: {
         border: '1px solid black',
         width: 40,
-        height: 40
-    }
-}
+        height: 40,
+        "&:hover": {
+          border: '1px solid white',
+        }
+    },
+    rootAlreadyMarked: {
+      border: '1px solid black',
+      width: 40,
+      height: 40,
+  }
+})
 
 export class Casa extends Component {
   constructor(props){
     super(props)
+
     this.renderPiece = this.renderPiece.bind(this)
     this.defineColor = this.defineColor.bind(this)
   }
@@ -47,13 +57,13 @@ export class Casa extends Component {
   }
 
   render() {
-    const {handleClickFunction, line, column} = this.props
+    const {classes, handleClickFunction, line, column, value} = this.props
     return (
-      <div onClick={() => {handleClickFunction(line,column)}} style={styles.root}>
+      <div onClick={() => {handleClickFunction(line,column)}} className={value ? classes.rootAlreadyMarked : classes.root}>
        {this.renderPiece()}
       </div>
     )
   }
 }
 
-export default Casa
+export default withStyles(styles)(Casa)
