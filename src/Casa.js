@@ -4,16 +4,16 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
     root: {
         border: '1px solid black',
-        width: 40,
-        height: 40,
+        width: 60,
+        height: 60,
         "&:hover": {
           border: '1px solid white',
         }
     },
     rootAlreadyMarked: {
       border: '1px solid black',
-      width: 40,
-      height: 40,
+      width: 60,
+      height: 60,
   }
 })
 
@@ -44,8 +44,8 @@ export class Casa extends Component {
     let color = this.defineColor()
     if (color){
       let pieceStyle = {
-        width: 40,
-        height: 40,
+        width: 60,
+        height: 60,
         backgroundColor: color,
         borderRadius: "50%"
       }

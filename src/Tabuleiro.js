@@ -5,16 +5,16 @@ const styles = {
     root: {
         marginTop: 20,
         background: '#00af13',
-        width: 400,
-        height: 400,
+        width: 480,
+        height: 490,
         display: 'flex',
         flexWrap: "wrap",
-        border: '10px solid black',
+        border: '7px solid black',
     },
     casa: {
       display: "inline-block",
       flexGrow: 1,
-      width: `calc(100% * (1/8))`,
+      width: 60,
     }
 }
 
