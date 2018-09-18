@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import Casa from './Casa'
 
+import makeRequest from './pythonAction'
+
 const styles = {
     root: {
         marginTop: 20,
@@ -29,6 +31,7 @@ export class Tabuleiro extends Component {
 
     this.handleClick = this.handleClick.bind(this)
     this.nextTurn = this.nextTurn.bind(this)
+    this.sendInfo = this.sendInfo.bind(this)
   }
 
   componentDidMount(){
@@ -59,6 +62,10 @@ export class Tabuleiro extends Component {
     })
   }
 
+  sendInfo(){
+    makeRequest(this.state.tabuleiro)
+  }
+
   handleClick(line,column){
     let updatedTable = this.state.tabuleiro
     if (updatedTable[line][column] === ""){
@@ -85,7 +92,7 @@ export class Tabuleiro extends Component {
             ))
           )
         )) : null}
-        
+        <button onClick={() => this.sendInfo()}>Clicky Clicky</button>
       </div>
     )
   }
