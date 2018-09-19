@@ -1,2 +1,9 @@
+from inteligence import *
+
 def main():
-    return "Hello World from main"
+    matTable = [['', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', ''], ['', '', 'P', 'B', 'P', '', '', ''], ['', '', '', 'P', 'B', '', '', ''], ['', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '']]
+    matTable = getDicionarioDePossibilidades(matTable, 'B')
+
+    print(matTable)
+
+main()
