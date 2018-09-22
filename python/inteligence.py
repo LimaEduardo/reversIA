@@ -1,10 +1,21 @@
-def getMatrizJogada(matriz, listPos, cor):
-    for chave in listPos:
-        x,y = map(int, chave.split(" "))
+import copy
+
+def notCor(cor):
+    if cor == 'P':
+        return 'B'
+    else:
+        return 'p'
+
+def getMatrizJogadaRealizada(mat, listPecasAVirar, cor):
+    matriz = mat.copy()
+    for chave in listPecasAVirar:
+        x = chave[0]
+        y = chave[1]
         matriz[x][y] = cor
     return matriz
 
-def getDicionarioDePossibilidades(matriz, cor):
+def getDicionarioDePossibilidades(mat, cor):
+    matriz = mat.copy()
     dicPossiveisPos = {}
     for indiceLinha, lista in enumerate(matriz):
         for indiceColuna,valor in enumerate(lista):
@@ -18,14 +29,14 @@ def getDicionarioDePossibilidades(matriz, cor):
 
     return dicPossiveisPos
 
-
 ''' Possiveis direçoes a percorrer a partir de um elemento
     [ -1 , -1 ] [ -1 , 0 ] [ -1 , 1 ]
     [  0 , -1 ] [Elemento] [  0 , 1 ]
     [ -1 ,  1 ] [  1 , 0 ] [  1 , 1 ]
 '''
 
-def procuraPossiveisPos(mat, linha, coluna):
+def procuraPossiveisPos(matriz, linha, coluna):
+    mat = matriz.copy()
     direcoes = [[-1, -1], [-1 , 0], [-1 , 1], [0 , -1], [0, 1], [-1 ,1], [1, 0], [1, 1]]
     possiveisPos = {}
     for direcao in direcoes:
@@ -37,11 +48,13 @@ def procuraPossiveisPos(mat, linha, coluna):
         if quantOponentes != 0:            
             xChave = linha + ((quantOponentes + 1) * acrescimoX)
             yChave = coluna + ((quantOponentes + 1) * acrescimoY)
+            listaOponente.append([xChave, yChave])
             possiveisPos[str(xChave) + " " +str(yChave)] = listaOponente
     return possiveisPos
 
 
-def percorreVetor(mat, lin, col, acrescimoX, acrescimoY):
+def percorreVetor(matriz, lin, col, acrescimoX, acrescimoY):
+    mat = matriz.copy()
     corMinha = mat[lin][col]
     corOponente = "P" if corMinha == "B" else "B"
 
