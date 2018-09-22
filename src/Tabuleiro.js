@@ -26,12 +26,13 @@ export class Tabuleiro extends Component {
     this.state = {
       tabuleiro: undefined,
       pronto: false,
-      turn: "P"
+      turn: "P",
+      possibilidades: undefined
     }
 
     this.handleClick = this.handleClick.bind(this)
     this.nextTurn = this.nextTurn.bind(this)
-    this.sendInfo = this.sendInfo.bind(this)
+    this.getPossibilities = this.getPossibilities.bind(this)
   }
 
   componentDidMount(){
@@ -49,31 +50,64 @@ export class Tabuleiro extends Component {
     this.setState({
       tabuleiro: novoTabuleiro,
       pronto: true
+    }, () => {
+      this.getPossibilities()
     })
   }
 
-  nextTurn(){
+  nextTurn(updatedTable, line, column){
     return new Promise((resolve,reject) => {
-      let currentTurn = this.state.turn
-      if (currentTurn == "P"){
-        resolve("B")
+      const {turn, possibilidades} = this.state
+      const limpaTabuleiro = updatedTable
+      const chaveParaNaoDeletar = ""+line+" "+column // Chave que não é para ser apagada
+      for(var key in possibilidades){
+        if (key === chaveParaNaoDeletar){
+          continue
+        }
+        let xy = key.split(" ");
+        limpaTabuleiro[xy[0]][xy[1]] = ""
       }
-      resolve("P")
+      if (turn === "P"){
+        resolve(["B",limpaTabuleiro])
+      }
+      resolve(["P", limpaTabuleiro])
     })
   }
 
-  sendInfo(){
-    makeRequest(this.state.tabuleiro)
+  getPossibilities(){
+    makeRequest(this.state.tabuleiro, this.state.turn).then((possibilidades) => {
+      let novoTabuleiro = this.state.tabuleiro
+      for(var key in possibilidades){
+        let xy = key.split(" ");
+        novoTabuleiro[xy[0]][xy[1]] = "J"
+      }
+      this.setState({tabuleiro : novoTabuleiro, possibilidades})
+    })
   }
 
   handleClick(line,column){
+    const {possibilidades, turn} = this.state
     let updatedTable = this.state.tabuleiro
-    if (updatedTable[line][column] === ""){
-      updatedTable[line][column] = this.state.turn
-      this.nextTurn().then((nextTurn) => {
+    let chave = ""+line+" "+column
+    console.log(possibilidades)
+    console.log(possibilidades[chave])
+    console.log(possibilidades[chave][0])
+    let casasConquistadas = possibilidades[chave]
+    
+    for (var indice in casasConquistadas){
+      updatedTable[casasConquistadas[indice][0]][casasConquistadas[indice][1]] = turn
+    }
+
+    if (updatedTable[line][column] === "J"){
+      updatedTable[line][column] = turn
+      this.nextTurn(updatedTable, line, column).then((nextTurn) => {
+        console.log(nextTurn[1])
         this.setState({
-          tabuleiro: updatedTable,
-          turn: nextTurn
+          tabuleiro: nextTurn[1],
+          turn: nextTurn[0],
+          possibilidades: undefined
+        }, () => {
+          this.getPossibilities()
         })
       })
     }
@@ -92,7 +126,7 @@ export class Tabuleiro extends Component {
             ))
           )
         )) : null}
-        <button onClick={() => this.sendInfo()}>Clicky Clicky</button>
+        <button onClick={() => this.getPossibilities()}>Clicky Clicky</button>
       </div>
     )
   }

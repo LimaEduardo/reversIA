@@ -50,7 +50,7 @@ class App extends Component {
     super(props)
     this.state = {
       open: true,
-      mode: ""
+      mode: "IA"
     }
 
     this.renderWelcome = this.renderWelcome.bind(this)
@@ -104,7 +104,7 @@ class App extends Component {
     const {mode} = this.state
     return (
       <Grid className={classes.root}>
-        {this.renderWelcome()}
+        {/* {this.renderWelcome()} */}
         {mode !== "" ? (
           <div style={styles.tableContainer} align="center">
             <Tabuleiro/>
