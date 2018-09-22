@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
+import Paper from '@material-ui/core/Paper';
 
 import Tabuleiro from './Tabuleiro'
 
@@ -42,6 +43,17 @@ const styles = theme => ({
     background: `linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(${Background})`,
     backgroundSize: "cover",
     height: "100vh"
+  },
+  turnContainer: {
+    backgroundColor : "#eaeaea"
+  },
+  paper: {
+    ...theme.mixins.gutters(),
+    paddingTop: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 2,
+  },
+  displayTypography: {
+    color: "#000000"
   }
 })
 
@@ -50,11 +62,17 @@ class App extends Component {
     super(props)
     this.state = {
       open: true,
-      mode: "IA"
+      mode: "IA",
+      turn: "P",
+      p1Points: 2,
+      p2Points: 2
     }
 
     this.renderWelcome = this.renderWelcome.bind(this)
     this.handleChoice = this.handleChoice.bind(this)
+    this.changePlayer = this.changePlayer.bind(this)
+    this.renderPlayer = this.renderPlayer.bind(this)
+    this.renderPaper = this.renderPaper.bind(this)
   }
 
   handleChoice(choice){
@@ -98,16 +116,83 @@ class App extends Component {
     )
   }
 
+  renderPlayer(){
+    const {turn} = this.state
+    if (turn === "P"){
+      return "Preto"
+    } else if (turn === "B"){
+      return "Branco"
+    } else {
+      return ""
+    }
+    
+  }
+
+  changePlayer(turn, quantidadeCasasConquistadas){
+    let p1Points = this.state.p1Points
+    let p2Points = this.state.p2Points
+    console.log(quantidadeCasasConquistadas)
+    if (turn === "B"){
+      p1Points += quantidadeCasasConquistadas + 1
+      p2Points -= quantidadeCasasConquistadas
+    } else if (turn === "P") {
+      p1Points -= quantidadeCasasConquistadas
+      p2Points += quantidadeCasasConquistadas + 1
+    }
+    this.setState({turn,p1Points,p2Points})
+  }
+
+  renderPaper(player){
+    const {classes} = this.props
+    const {p1Points, p2Points} = this.state
+    let playerName, points
+    if (player === "P"){
+      playerName = "Preto"
+      points = p1Points
+    } else if (player === "B") {
+      playerName = "Branco"
+      points = p2Points
+    }
+    return (
+      <Paper className={classes.paper} elevation={1}>
+        <Typography variant="headline" align="center" className={classes.displayTypography} gutterBottom>
+          Pontuação do jogador {playerName}:
+        </Typography>
+        <Typography variant="display1" align="center" className={classes.displayTypography} gutterBottom>
+          {points}
+        </Typography>
+      </Paper>
+    )
+  }
+
 
   render() {
     const {classes} = this.props
     const {mode} = this.state
+
     return (
       <Grid className={classes.root}>
         {/* {this.renderWelcome()} */}
         {mode !== "" ? (
-          <div style={styles.tableContainer} align="center">
-            <Tabuleiro/>
+          <div>
+            <div align="center" className={classes.turnContainer}>
+              <Typography variant="display2" align="center" className={classes.displayTypography}>
+                Vez do jogador: {this.renderPlayer()}
+              </Typography>
+            </div>
+            <Grid container alignItems="center" justify="space-around" direction="row">
+              <Grid item md={3}>
+                {this.renderPaper("P")}
+              </Grid>
+              <Grid item md={6}>
+                <div style={styles.tableContainer} align="center">
+                  <Tabuleiro changePlayer={this.changePlayer}/>
+                </div>
+              </Grid>
+              <Grid item md={3}>
+                {this.renderPaper("B")}
+              </Grid>
+            </Grid>
           </div>
         ): null}
       </Grid>

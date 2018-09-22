@@ -55,7 +55,8 @@ export class Tabuleiro extends Component {
     })
   }
 
-  nextTurn(updatedTable, line, column){
+  nextTurn(updatedTable, line, column, quantidadeCasasConquistadas){
+    const {changePlayer} = this.props
     return new Promise((resolve,reject) => {
       const {turn, possibilidades} = this.state
       const limpaTabuleiro = updatedTable
@@ -68,17 +69,22 @@ export class Tabuleiro extends Component {
         limpaTabuleiro[xy[0]][xy[1]] = ""
       }
       if (turn === "P"){
+        changePlayer("B", quantidadeCasasConquistadas)
         resolve(["B",limpaTabuleiro])
+      } else {
+        changePlayer("P", quantidadeCasasConquistadas)
+        resolve(["P", limpaTabuleiro])
       }
-      resolve(["P", limpaTabuleiro])
     })
   }
 
   getPossibilities(){
     makeRequest(this.state.tabuleiro, this.state.turn).then((possibilidades) => {
       let novoTabuleiro = this.state.tabuleiro
+      console.log(novoTabuleiro)
       for(var key in possibilidades){
         let xy = key.split(" ");
+        console.log(xy)
         novoTabuleiro[xy[0]][xy[1]] = "J"
       }
       this.setState({tabuleiro : novoTabuleiro, possibilidades})
@@ -89,18 +95,15 @@ export class Tabuleiro extends Component {
     const {possibilidades, turn} = this.state
     let updatedTable = this.state.tabuleiro
     let chave = ""+line+" "+column
-    console.log(possibilidades)
-    console.log(possibilidades[chave])
-    console.log(possibilidades[chave][0])
     let casasConquistadas = possibilidades[chave]
-    
+    let quantidadeCasasConquistadas = casasConquistadas.length
     for (var indice in casasConquistadas){
       updatedTable[casasConquistadas[indice][0]][casasConquistadas[indice][1]] = turn
     }
 
     if (updatedTable[line][column] === "J"){
       updatedTable[line][column] = turn
-      this.nextTurn(updatedTable, line, column).then((nextTurn) => {
+      this.nextTurn(updatedTable, line, column, quantidadeCasasConquistadas).then((nextTurn) => {
         console.log(nextTurn[1])
         this.setState({
           tabuleiro: nextTurn[1],
@@ -126,7 +129,6 @@ export class Tabuleiro extends Component {
             ))
           )
         )) : null}
-        <button onClick={() => this.getPossibilities()}>Clicky Clicky</button>
       </div>
     )
   }
