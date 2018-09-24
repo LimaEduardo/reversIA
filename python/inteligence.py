@@ -4,7 +4,7 @@ def notCor(cor):
     if cor == 'P':
         return 'B'
     else:
-        return 'p'
+        return 'P'
 
 def getMatrizJogadaRealizada(mat, listPecasAVirar, cor):
     matriz = mat.copy()

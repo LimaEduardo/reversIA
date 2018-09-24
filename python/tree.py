@@ -40,7 +40,6 @@ class Tree:
             self.mountTree(nohF, nivel + 1)
         
 
-       
 
     def __str__(self):
         saida = self.imprimeArvore(self.raiz)
