@@ -7,17 +7,16 @@ def notCor(cor):
         return 'P'
 
 def getMatrizJogadaRealizada(mat, listPecasAVirar, cor):
-    matriz = mat.copy()
+    matriz = copy.deepcopy(mat)
     for chave in listPecasAVirar:
         x = chave[0]
         y = chave[1]
         matriz[x][y] = cor
     return matriz
 
-def getDicionarioDePossibilidades(matriz, cor):
-    mat = copy.deepcopy(matriz)
+def getDicionarioDePossibilidades(mat, cor):
     dicPossiveisPos = {}
-    for indiceLinha, lista in enumerate(matriz):
+    for indiceLinha, lista in enumerate(mat):
         for indiceColuna, valor in enumerate(lista):
             if valor == cor:
                 possiveisPos = procuraPossiveisPos(mat, indiceLinha, indiceColuna)
@@ -35,8 +34,7 @@ def getDicionarioDePossibilidades(matriz, cor):
     [  1 , -1 ] [  1 , 0 ] [  1 , 1 ]
 '''
 
-def procuraPossiveisPos(matriz, linha, coluna):
-    mat = copy.deepcopy(matriz)
+def procuraPossiveisPos(mat, linha, coluna):
     direcoes = [[-1, -1], [-1 , 0], [-1 , 1], [0 , -1], [0, 1], [1 ,-1], [1, 0], [1, 1]]
     possiveisPos = {}
     for direcao in direcoes:
@@ -53,8 +51,7 @@ def procuraPossiveisPos(matriz, linha, coluna):
     return possiveisPos
 
 
-def percorreVetor(matriz, lin, col, acrescimoX, acrescimoY):
-    mat = copy.deepcopy(matriz)
+def percorreVetor(mat, lin, col, acrescimoX, acrescimoY):
     corMinha = mat[lin][col]
     corOponente = notCor(corMinha)
 
