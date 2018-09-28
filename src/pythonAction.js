@@ -1,9 +1,11 @@
 import axios from 'axios'
 
-export default function makeRequest(table){
-    axios.post('http://localhost:5000', {table}).then((response) => {
-        console.log(response)
-    }, (error) => {
-        console.log(error)
+export default function makeRequest(table, color){
+    return new Promise((resolve, reject) => {
+        axios.post('http://localhost:5000', {table, color}).then((response) => {
+            resolve(response.data)
+        }, (error) => {
+            reject(error)
+        })
     })
 }

@@ -1,0 +1,22 @@
+3 2
+nivel: 3
+real	0m0,111s
+
+3 2
+nivel: 4
+real	0m0,244s
+
+3 2
+nivel: 5
+real	0m0,888s
+
+3 2
+nivel: 6
+real	0m6,158s
+
+3 2
+nivel: 7
+real	0m39,490s
+
+Nivel: 10
+real    25+m0,0+s

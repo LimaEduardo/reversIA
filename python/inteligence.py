@@ -4,10 +4,10 @@ def notCor(cor):
     if cor == 'P':
         return 'B'
     else:
-        return 'p'
+        return 'P'
 
 def getMatrizJogadaRealizada(mat, listPecasAVirar, cor):
-    matriz = mat.copy()
+    matriz = copy.deepcopy(mat)
     for chave in listPecasAVirar:
         x = chave[0]
         y = chave[1]
@@ -15,12 +15,11 @@ def getMatrizJogadaRealizada(mat, listPecasAVirar, cor):
     return matriz
 
 def getDicionarioDePossibilidades(mat, cor):
-    matriz = mat.copy()
     dicPossiveisPos = {}
-    for indiceLinha, lista in enumerate(matriz):
-        for indiceColuna,valor in enumerate(lista):
+    for indiceLinha, lista in enumerate(mat):
+        for indiceColuna, valor in enumerate(lista):
             if valor == cor:
-                possiveisPos = procuraPossiveisPos(matriz, indiceLinha, indiceColuna)
+                possiveisPos = procuraPossiveisPos(mat, indiceLinha, indiceColuna)
                 for chave in possiveisPos:
                     if chave in dicPossiveisPos:
                         dicPossiveisPos[chave] += possiveisPos[chave]
@@ -32,12 +31,11 @@ def getDicionarioDePossibilidades(mat, cor):
 ''' Possiveis direçoes a percorrer a partir de um elemento
     [ -1 , -1 ] [ -1 , 0 ] [ -1 , 1 ]
     [  0 , -1 ] [Elemento] [  0 , 1 ]
-    [ -1 ,  1 ] [  1 , 0 ] [  1 , 1 ]
+    [  1 , -1 ] [  1 , 0 ] [  1 , 1 ]
 '''
 
-def procuraPossiveisPos(matriz, linha, coluna):
-    mat = matriz.copy()
-    direcoes = [[-1, -1], [-1 , 0], [-1 , 1], [0 , -1], [0, 1], [-1 ,1], [1, 0], [1, 1]]
+def procuraPossiveisPos(mat, linha, coluna):
+    direcoes = [[-1, -1], [-1 , 0], [-1 , 1], [0 , -1], [0, 1], [1 ,-1], [1, 0], [1, 1]]
     possiveisPos = {}
     for direcao in direcoes:
         acrescimoX = direcao[0]
@@ -53,15 +51,14 @@ def procuraPossiveisPos(matriz, linha, coluna):
     return possiveisPos
 
 
-def percorreVetor(matriz, lin, col, acrescimoX, acrescimoY):
-    mat = matriz.copy()
+def percorreVetor(mat, lin, col, acrescimoX, acrescimoY):
     corMinha = mat[lin][col]
-    corOponente = "P" if corMinha == "B" else "B"
+    corOponente = notCor(corMinha)
 
     # Comeca pelo elemento a seguir do seu
     linAtual = lin + acrescimoX 
     colAtual = col + acrescimoY
-    if not (linAtual < len(mat) and colAtual < len(mat[0])):
+    if linAtual >= len(mat) or linAtual < 0 or colAtual >= len(mat[0]) or colAtual < 0:
         return []
     corPosAtual = mat[linAtual][colAtual]
 

@@ -31,7 +31,7 @@ export class Casa extends Component {
     if(value !== ""){
       if(value === "P"){
         color = "black"
-      } else {
+      } else if (value === "B") {
         color = "white"
       }
     } else {
@@ -59,7 +59,7 @@ export class Casa extends Component {
   render() {
     const {classes, handleClickFunction, line, column, value} = this.props
     return (
-      <div onClick={() => {handleClickFunction(line,column)}} className={value ? classes.rootAlreadyMarked : classes.root}>
+      <div onClick={() => {if (value === "J") {handleClickFunction(line,column)}}} className={value !== "J" ? classes.rootAlreadyMarked : classes.root}>
        {this.renderPiece()}
       </div>
     )

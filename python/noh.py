@@ -8,22 +8,25 @@ def ehRaiz(noh):
         return True
 
 class Noh:
-    
-    def __init__(self, matrizGame, cor, nohPai = None):
+    dicPossiveisJogadas = {}
+
+    def __init__(self, matrizGame, cor, nivel = 0, nohPai = None, chave = 'raiz', alfaBeta = 0):
         self.matrizGame = copy.deepcopy(matrizGame)
         self.nohPai = nohPai
         self.cor = cor
         self.nohFilhos = []
-        self.dicPossiveisJogadas = {}
+        self.nivel = nivel
+        self.chave = chave
+        self.alfaBeta = alfaBeta
 
         # Pega o dicionario de jogadas possiveis 
-        self.dicPossiveisJogadas = getDicionarioDePossibilidades(copy.deepcopy(self.matrizGame), self.cor)
+        self.dicPossiveisJogadas = getDicionarioDePossibilidades(self.matrizGame, self.cor)
 
     def __str__(self):
-        return getPrint()
+        return self.getPrint()
 
     def getPrint(self):
-        saida = "\n   "
+        saida = "\n " + self.cor + " " 
         for col in range(len(self.matrizGame[0])):
             saida += " " + str(col) + " "
         saida += "\n"
@@ -38,8 +41,12 @@ class Noh:
         #saida += "\n"
         for chave in self.dicPossiveisJogadas:
             saida += " \'"+ chave + "\' "
+        #saida += "\n"
+        saida += "\n Ultima jogada: " + self.chave
+        saida += " | Peças ganhas: " + str(self.alfaBeta)
+        saida += " | Nivel na arvore: "+ str(self.nivel)
+        # saida += "\nFilhos: " + str(self.nohFilhos)
+        # saida += "\nPai: " + str(ehRaiz(self))
         saida += "\n"
-        saida += "Filhos: " + str(self.nohFilhos)
-        saida += "\nPai: " + str(ehRaiz(self))
         return saida
     
