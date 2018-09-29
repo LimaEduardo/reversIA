@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import Casa from './Casa'
 
-import makeRequest from './pythonAction'
+import {makeRequest, getIAPlay} from './pythonAction'
+// import { Button } from '@material-ui/core/Button';
 
 const styles = {
     root: {
@@ -81,17 +82,19 @@ export class Tabuleiro extends Component {
   getPossibilities(){
     makeRequest(this.state.tabuleiro, this.state.turn).then((possibilidades) => {
       let novoTabuleiro = this.state.tabuleiro
-      console.log(novoTabuleiro)
+      console.log("--- possibilidades inicio ---")
       for(var key in possibilidades){
         let xy = key.split(" ");
         console.log(xy)
         novoTabuleiro[xy[0]][xy[1]] = "J"
       }
+      console.log("--- possibilidades fim ---")
       this.setState({tabuleiro : novoTabuleiro, possibilidades})
     })
   }
 
   handleClick(line,column){
+    console.log("OK")
     const {possibilidades, turn} = this.state
     let updatedTable = this.state.tabuleiro
     let chave = ""+line+" "+column
@@ -100,11 +103,9 @@ export class Tabuleiro extends Component {
     for (var indice in casasConquistadas){
       updatedTable[casasConquistadas[indice][0]][casasConquistadas[indice][1]] = turn
     }
-
-    if (updatedTable[line][column] === "J"){
+    if (updatedTable[line][column] === turn){
       updatedTable[line][column] = turn
       this.nextTurn(updatedTable, line, column, quantidadeCasasConquistadas).then((nextTurn) => {
-        console.log(nextTurn[1])
         this.setState({
           tabuleiro: nextTurn[1],
           turn: nextTurn[0],
@@ -112,6 +113,8 @@ export class Tabuleiro extends Component {
         }, () => {
           this.getPossibilities()
         })
+      }, (error) => {
+        console.log(error)
       })
     }
   }
@@ -129,6 +132,7 @@ export class Tabuleiro extends Component {
             ))
           )
         )) : null}
+        <button onClick={() => {getIAPlay(this.state.tabuleiro, this.state.turn)}}>Click Clicky</button>
       </div>
     )
   }
