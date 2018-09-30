@@ -34,6 +34,7 @@ export class Tabuleiro extends Component {
     this.handleClick = this.handleClick.bind(this)
     this.nextTurn = this.nextTurn.bind(this)
     this.getPossibilities = this.getPossibilities.bind(this)
+    this.contaPecasForcado = this.contaPecasForcado.bind(this)
   }
 
   componentDidMount(){
@@ -53,6 +54,25 @@ export class Tabuleiro extends Component {
       pronto: true
     }, () => {
       this.getPossibilities()
+    })
+  }
+
+  //Gambiarra
+  contaPecasForcado(){
+    return new Promise((resolve,reject) => {
+      let pecaPreta = 0
+      let pecaBranca = 0
+      const {tabuleiro} = this.state
+      for (let i = 0; i < 8; i++){
+        for (let j = 0; j < 8; j++){
+          if (tabuleiro[i][j] === "P"){
+            pecaPreta++
+          } else if (tabuleiro[i][j] === "B"){
+            pecaBranca++
+          }
+        }
+      }
+      resolve([pecaPreta,pecaBranca])
     })
   }
 
@@ -111,7 +131,14 @@ export class Tabuleiro extends Component {
           turn: nextTurn[0],
           possibilidades: undefined
         }, () => {
-          this.getPossibilities()
+          getIAPlay(this.state.tabuleiro, this.state.turn).then((jogadaIA) => {
+            this.setState({
+              tabuleiro: jogadaIA,
+              possibilidades: undefined  
+            }, () => {
+              this.getPossibilities()
+            })
+          })
         })
       }, (error) => {
         console.log(error)
@@ -132,7 +159,8 @@ export class Tabuleiro extends Component {
             ))
           )
         )) : null}
-        <button onClick={() => {getIAPlay(this.state.tabuleiro, this.state.turn)}}>Click Clicky</button>
+        <button onClick={() => {}}>Click Clicky</button>
+        {/* getIAPlay(this.state.tabuleiro, this.state.turn) */}
       </div>
     )
   }

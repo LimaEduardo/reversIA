@@ -25,11 +25,11 @@ def get_possibilidades():
 
 @app.route('/get_jogada_ia', methods=['POST', 'OPTIONS'])
 @cross_origin(supports_credentials=True)
-def get_jogada_ia():
+def get_jogada_ia():    
     tabela = request.json['table']
     cor = request.json['color']
     arvore = Tree(tabela, cor, 3)
-    tabela = getMatrizJogadaRealizada(tabela, arvore.melhorJogada, cor)
+    tabela = json.dumps(getMatrizJogadaRealizada(tabela, arvore.melhorJogada, cor))
     response = app.response_class(
         response=tabela,
         status=200,
