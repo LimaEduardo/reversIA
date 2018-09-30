@@ -10,7 +10,13 @@ class Tree:
         for i in range(self.nivelMax):
             self.filhos[i+1] = []
         self.mountTree(self.raiz, 0)
-        self.melhorJogada = self.raiz.dicPossiveisJogadas[self.encontraMelhorJogada()]
+
+        chaveMelhorJogada = self.encontraMelhorJogada()
+        if chaveMelhorJogada == "-1 -1":   # '-1 -1' parametro de fim de game
+            self.pecasAVirarJogadaAtual = []
+        else:
+            # self.raiz.dicPossiveisJogadas[chaveMelhorJogada] -> me retorna uma LISTA
+            self.pecasAVirarJogadaAtual = self.raiz.dicPossiveisJogadas[chaveMelhorJogada]
 
     def mountTree(self, noh, nivel):
         # nivelMax == 0: somente a Raiz | nivelMax < 0: Não porcessamos tambem!
@@ -59,13 +65,23 @@ class Tree:
             saida += self.imprimeArvore(elemento)
         return saida
             
-    def encontraMelhorJogada(self):
-        if(len(self.filhos) == 0):
-            return "-1 -1"
-        # print(self.filhos[self.nivelMax][0])
-        nohMaiorSaldo = self.filhos[self.nivelMax][0]
+    def encontraNivelParaJogada(self):
+        nv = self.nivelMax
+        while nv > 0:
+            if len(self.filhos[nv]) > 0:
+                return nv
+            nv -= 1
+        return 0
 
-        for noh in self.filhos[self.nivelMax]:
+    def encontraMelhorJogada(self):
+
+        nivel = self.encontraNivelParaJogada()
+        if nivel == 0:
+            return "-1 -1"
+
+        nohMaiorSaldo = self.filhos[nivel][0]
+
+        for noh in self.filhos[nivel]:
             if noh.alfaBeta > nohMaiorSaldo.alfaBeta:
                 nohMaiorSaldo = noh
         # print(nohMaiorSaldo.alfaBeta)
