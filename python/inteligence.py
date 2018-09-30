@@ -58,7 +58,7 @@ def percorreVetor(mat, lin, col, acrescimoX, acrescimoY):
     # Comeca pelo elemento a seguir do seu
     linAtual = lin + acrescimoX 
     colAtual = col + acrescimoY
-    if linAtual >= len(mat) or linAtual < 0 or colAtual >= len(mat[0]) or colAtual < 0:
+    if linAtual < 0 or linAtual >= len(mat) or colAtual < 0 or colAtual >= len(mat[0]):
         return []
     corPosAtual = mat[linAtual][colAtual]
 
@@ -68,7 +68,7 @@ def percorreVetor(mat, lin, col, acrescimoX, acrescimoY):
 
         linAtual += acrescimoX
         colAtual += acrescimoY 
-        if not (linAtual < len(mat) and colAtual < len(mat[0])):
+        if linAtual < 0 or linAtual >= len(mat) or colAtual < 0 or colAtual >= len(mat[0]):
             return []
         corPosAtual = mat[linAtual][colAtual]
 
