@@ -65,7 +65,8 @@ class App extends Component {
       mode: "IA",
       turn: "P",
       p1Points: 2,
-      p2Points: 2
+      p2Points: 2,
+      fimDeJogoMessage: ""
     }
 
     this.renderWelcome = this.renderWelcome.bind(this)
@@ -74,6 +75,7 @@ class App extends Component {
     this.changePlayerForcado = this.changePlayerForcado.bind(this)
     this.renderPlayer = this.renderPlayer.bind(this)
     this.renderPaper = this.renderPaper.bind(this)
+    this.fimDeJogo = this.fimDeJogo.bind(this)
   }
 
   handleChoice(choice){
@@ -149,6 +151,19 @@ class App extends Component {
     this.setState({turn,p1Points,p2Points})
   }
 
+  fimDeJogo(){
+    const {p1Points, p2Points} = this.state
+    let message = ""
+    if (p1Points > p2Points){
+      message = "Fim de jogo. O jogador PRETO foi o vencedor!"
+    } else if (p1Points < p2Points){
+      message = "Fim de jogo. O jogador BRANCO foi o vencedor!"
+    } else {
+      message = "Maluco, tu empatou um jogo de reversi com uma IA. Tu é fera demais"
+    }
+    this.setState({fimDeJogoMessage: message})
+  }
+
   renderPaper(player){
     const {classes} = this.props
     const {p1Points, p2Points} = this.state
@@ -175,7 +190,7 @@ class App extends Component {
 
   render() {
     const {classes} = this.props
-    const {mode} = this.state
+    const {mode, fimDeJogoMessage} = this.state
 
     return (
       <Grid className={classes.root}>
@@ -184,7 +199,12 @@ class App extends Component {
           <div>
             <div align="center" className={classes.turnContainer}>
               <Typography variant="display2" align="center" className={classes.displayTypography}>
-                Vez do jogador: {this.renderPlayer()}
+                {fimDeJogoMessage === "" ? (
+                  "Vez do jogador: " + this.renderPlayer()
+                ) : (
+                  fimDeJogoMessage
+                )}
+                
               </Typography>
             </div>
             <Grid container alignItems="center" justify="space-around" direction="row">
@@ -193,7 +213,7 @@ class App extends Component {
               </Grid>
               <Grid item md={6}>
                 <div style={styles.tableContainer} align="center">
-                  <Tabuleiro changePlayer={this.changePlayer} changePlayerForcado={this.changePlayerForcado}/>
+                  <Tabuleiro changePlayer={this.changePlayer} fimDeJogo={this.fimDeJogo} changePlayerForcado={this.changePlayerForcado}/>
                 </div>
               </Grid>
               <Grid item md={3}>
