@@ -35,6 +35,7 @@ export class Tabuleiro extends Component {
     this.nextTurn = this.nextTurn.bind(this)
     this.getPossibilities = this.getPossibilities.bind(this)
     this.contaPecasForcado = this.contaPecasForcado.bind(this)
+    this.verificaFim = this.verificaFim.bind(this)
   }
 
   componentDidMount(){
@@ -76,6 +77,21 @@ export class Tabuleiro extends Component {
     })
   }
 
+  //Outra gambiarra
+  verificaFim(){
+    const {tabuleiro} = this.state
+    return new Promise((resolve, reject) => {
+      for (let i = 0; i < 8; i++){
+        for (let j = 0; j < 8; j++){
+          if (tabuleiro[i][j] === ""){
+            reject()
+          } 
+        }
+      }
+      resolve()
+    })
+  }
+
   nextTurn(updatedTable, line, column, quantidadeCasasConquistadas){
     const {changePlayer} = this.props
     return new Promise((resolve,reject) => {
@@ -100,7 +116,21 @@ export class Tabuleiro extends Component {
   }
 
   getPossibilities(){
+    const {turn} = this.state
+    const {changePlayerForcado} = this.props
     makeRequest(this.state.tabuleiro, this.state.turn).then((possibilidades) => {
+      if (Object.keys(possibilidades).length === 0){
+        console.log("entro", Object.keys(possibilidades).length)
+        this.contaPecasForcado().then((pecas) => {
+          if (turn === "B"){
+            this.setState({turn: "P"})
+            changePlayerForcado("P", pecas)
+          } else {
+            this.setState({turn: "P"})
+            changePlayerForcado("P", pecas)
+          }
+        })
+      }
       let novoTabuleiro = this.state.tabuleiro
       console.log("--- possibilidades inicio ---")
       for(var key in possibilidades){
@@ -116,7 +146,7 @@ export class Tabuleiro extends Component {
   handleClick(line,column){
     console.log("OK")
     const {possibilidades, turn} = this.state
-    const {changePlayerForcado} = this.props
+    const {changePlayerForcado, fimDeJogo} = this.props
     let updatedTable = this.state.tabuleiro
     let chave = ""+line+" "+column
     let casasConquistadas = possibilidades[chave]
@@ -139,15 +169,19 @@ export class Tabuleiro extends Component {
             }, () => {
               this.contaPecasForcado().then((pecas) => {
                 console.log(pecas)
-                if (turn === "B"){
-                  this.setState({turn: "B"})
-                  changePlayerForcado("B", pecas)
-                } else {
+                if (turn === "P"){
                   this.setState({turn: "P"})
                   changePlayerForcado("P", pecas)
+                } else {
+                  this.setState({turn: "B"})
+                  changePlayerForcado("B", pecas)
                 }
+                this.verificaFim().then(() => {
+                  fimDeJogo()
+                }, () => {
+                  this.getPossibilities()
+                })
               })
-              this.getPossibilities()
             })
           })
         })
@@ -170,7 +204,6 @@ export class Tabuleiro extends Component {
             ))
           )
         )) : null}
-        <button onClick={() => {}}>Click Clicky</button>
       </div>
     )
   }
