@@ -71,6 +71,7 @@ class App extends Component {
     this.renderWelcome = this.renderWelcome.bind(this)
     this.handleChoice = this.handleChoice.bind(this)
     this.changePlayer = this.changePlayer.bind(this)
+    this.changePlayerForcado = this.changePlayerForcado.bind(this)
     this.renderPlayer = this.renderPlayer.bind(this)
     this.renderPaper = this.renderPaper.bind(this)
   }
@@ -142,6 +143,12 @@ class App extends Component {
     this.setState({turn,p1Points,p2Points})
   }
 
+  changePlayerForcado(turn, quantidadeCasas){
+    let p1Points = quantidadeCasas[0]
+    let p2Points = quantidadeCasas[1]
+    this.setState({turn,p1Points,p2Points})
+  }
+
   renderPaper(player){
     const {classes} = this.props
     const {p1Points, p2Points} = this.state
@@ -186,7 +193,7 @@ class App extends Component {
               </Grid>
               <Grid item md={6}>
                 <div style={styles.tableContainer} align="center">
-                  <Tabuleiro changePlayer={this.changePlayer}/>
+                  <Tabuleiro changePlayer={this.changePlayer} changePlayerForcado={this.changePlayerForcado}/>
                 </div>
               </Grid>
               <Grid item md={3}>

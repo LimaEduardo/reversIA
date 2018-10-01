@@ -29,7 +29,7 @@ def get_jogada_ia():
     tabela = request.json['table']
     cor = request.json['color']
     arvore = Tree(tabela, cor, 3)
-    tabela = json.dumps(getMatrizJogadaRealizada(tabela, arvore.melhorJogada, cor))
+    tabela = json.dumps(getMatrizJogadaRealizada(tabela, arvore.pecasAVirarJogadaAtual, cor))
     response = app.response_class(
         response=tabela,
         status=200,

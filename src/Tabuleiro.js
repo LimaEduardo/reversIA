@@ -116,6 +116,7 @@ export class Tabuleiro extends Component {
   handleClick(line,column){
     console.log("OK")
     const {possibilidades, turn} = this.state
+    const {changePlayerForcado} = this.props
     let updatedTable = this.state.tabuleiro
     let chave = ""+line+" "+column
     let casasConquistadas = possibilidades[chave]
@@ -136,6 +137,16 @@ export class Tabuleiro extends Component {
               tabuleiro: jogadaIA,
               possibilidades: undefined  
             }, () => {
+              this.contaPecasForcado().then((pecas) => {
+                console.log(pecas)
+                if (turn === "B"){
+                  this.setState({turn: "B"})
+                  changePlayerForcado("B", pecas)
+                } else {
+                  this.setState({turn: "P"})
+                  changePlayerForcado("P", pecas)
+                }
+              })
               this.getPossibilities()
             })
           })
@@ -160,7 +171,6 @@ export class Tabuleiro extends Component {
           )
         )) : null}
         <button onClick={() => {}}>Click Clicky</button>
-        {/* getIAPlay(this.state.tabuleiro, this.state.turn) */}
       </div>
     )
   }
